@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agnese Upmane — Personal Assistant & Household Manager · Cendre</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #ECEBE6;
+      --bg-warm:      #E0DED9;
+      --bg-dark:      #2E2E2C;
+      --text:         #1C1C1A;
+      --text-muted:   #6A6A66;
+      --accent:       #44443F;
+      --accent-light: #D5D5D0;
+      --accent-pale:  #E3E2DD;
+      --border:       #D0CFCA;
+      --white:        #FFFFFF;
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'Outfit', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ─────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.4rem 3rem;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(236,235,230,0.93);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+    nav.scrolled { border-bottom-color: var(--border); }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.15rem; font-weight: 500; letter-spacing: 0.04em;
+      color: var(--text); text-decoration: none;
+    }
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.7rem; font-weight: 400;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--text-muted); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ── HERO ────────────────────────────── */
+    .hero {
+      min-height: 100dvh;
+      display: grid; grid-template-columns: 55% 45%;
+      align-items: center;
+      max-width: 1300px; margin: 0 auto;
+      padding: 5rem 3rem 3rem;
+      gap: 2rem;
+    }
+
+    .hero-content { padding-top: 1rem; }
+
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 0.8rem;
+      font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1.6rem;
+      opacity: 0; animation: fadeUp 0.7s ease 0.1s forwards;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: block; width: 2rem; height: 1px; background: var(--accent);
+    }
+
+    .hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(3.8rem, 6.5vw, 6rem);
+      font-weight: 300; line-height: 0.95; letter-spacing: -0.02em;
+      color: var(--text); margin-bottom: 0.6rem;
+      opacity: 0; animation: fadeUp 0.7s ease 0.2s forwards;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+      font-weight: 400; font-style: italic;
+      color: var(--text-muted); margin-bottom: 2rem;
+      opacity: 0; animation: fadeUp 0.7s ease 0.3s forwards;
+    }
+
+    .hero-desc {
+      font-size: 0.93rem; color: var(--text-muted);
+      max-width: 46ch; line-height: 1.85; margin-bottom: 2.8rem;
+      opacity: 0; animation: fadeUp 0.7s ease 0.4s forwards;
+    }
+
+    .hero-actions {
+      display: flex; gap: 1.8rem; align-items: center;
+      opacity: 0; animation: fadeUp 0.7s ease 0.5s forwards;
+    }
+
+    .btn-primary {
+      display: inline-block; padding: 0.8rem 2rem;
+      background: var(--accent); color: var(--bg);
+      font-size: 0.72rem; font-weight: 400;
+      letter-spacing: 0.13em; text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: #2E2E2A; transform: translateY(-1px); }
+
+    .btn-ghost {
+      font-size: 0.72rem; letter-spacing: 0.13em; text-transform: uppercase;
+      color: var(--text-muted); text-decoration: none;
+      display: flex; align-items: center; gap: 0.5rem;
+      transition: color 0.2s;
+    }
+    .btn-ghost:hover { color: var(--text); }
+    .btn-ghost svg { transition: transform 0.2s; }
+    .btn-ghost:hover svg { transform: translateY(3px); }
+
+    .hero-visual {
+      position: relative; display: flex;
+      justify-content: center; align-items: center;
+      min-height: 440px;
+      opacity: 0; animation: fadeIn 1s ease 0.5s forwards;
+    }
+    .hero-portrait {
+      width: 360px; height: 480px;
+      display: block;
+    }
+
+    /* ── SHARED SECTION ──────────────────── */
+    .container {
+      max-width: 1300px; margin: 0 auto; padding: 0 3rem;
+    }
+
+    .section-pad { padding: 8rem 0; }
+    .section-pad-sm { padding: 6rem 0; }
+
+    .ruled { border-top: 1px solid var(--border); }
+
+    .label {
+      display: flex; align-items: center; gap: 0.8rem;
+      font-size: 0.66rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .label::before {
+      content: ''; display: block; width: 1.5rem; height: 1px; background: var(--accent);
+    }
+
+    .h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 4vw, 3.4rem);
+      font-weight: 300; line-height: 1.1; color: var(--text);
+    }
+    .h2 em { font-style: italic; color: var(--accent); }
+
+    /* ── ABOUT ───────────────────────────── */
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 2fr;
+      gap: 7rem; align-items: start;
+    }
+
+    .about-sticky { position: sticky; top: 8rem; }
+
+    .about-number {
+      font-family: var(--font-display);
+      font-size: 8rem; font-weight: 300;
+      color: var(--accent-light); line-height: 1; margin-bottom: 2.5rem;
+    }
+
+    .stats { display: flex; flex-direction: column; gap: 1.5rem; }
+    .stat { border-top: 1px solid var(--border); padding-top: 1rem; }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2.2rem; font-weight: 400; color: var(--text); line-height: 1;
+    }
+    .stat-lbl {
+      font-size: 0.68rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-muted); margin-top: 0.2rem;
+    }
+
+    .about-body p {
+      font-size: 1rem; line-height: 1.9;
+      color: var(--text-muted); max-width: 62ch; margin-bottom: 1.4rem;
+    }
+    .about-body p:first-child {
+      font-family: var(--font-display);
+      font-size: 1.4rem; font-weight: 400;
+      line-height: 1.65; color: var(--text);
+    }
+
+    /* ── SERVICES ────────────────────────── */
+    .services-bg { background: var(--accent-pale); }
+
+    .services-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--border); margin-top: 3rem;
+    }
+
+    .svc {
+      padding: 2.5rem; border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.25s;
+    }
+    .svc:nth-child(3n) { border-right: none; }
+    .svc:nth-last-child(-n+3) { border-bottom: none; }
+    .svc:hover { background: #F3F2ED; }
+
+    .svc-num {
+      font-family: var(--font-display);
+      font-size: 3rem; font-weight: 300; color: var(--text);
+      line-height: 1; margin-bottom: 1rem; transition: color 0.25s;
+    }
+    .svc:hover .svc-num { color: var(--text); }
+
+    .svc-name {
+      font-family: var(--font-display);
+      font-size: 1.2rem; font-weight: 500; color: var(--text);
+      margin-bottom: 0.6rem;
+    }
+    .svc-desc { font-size: 0.84rem; color: var(--text-muted); line-height: 1.72; }
+
+    /* ── EXPERIENCE ──────────────────────── */
+    .exp-grid {
+      display: grid; grid-template-columns: 1fr 2fr;
+      gap: 7rem; align-items: start;
+    }
+    .exp-sticky { position: sticky; top: 8rem; }
+
+    .timeline { display: flex; flex-direction: column; }
+
+    .tl-item {
+      display: grid; grid-template-columns: 130px 1fr;
+      gap: 2rem; padding: 2.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .tl-item:first-child { padding-top: 0; }
+    .tl-item:last-child { border-bottom: none; }
+
+    .tl-date {
+      font-size: 0.68rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--accent); padding-top: 0.3rem;
+    }
+
+    .tl-role {
+      font-family: var(--font-display);
+      font-size: 1.2rem; font-weight: 500; color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+    .tl-employer {
+      font-size: 0.72rem; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.7rem;
+    }
+    .tl-desc { font-size: 0.86rem; color: var(--text-muted); line-height: 1.72; }
+
+    /* ── CREDENTIALS ─────────────────────── */
+    .creds-bg { background: var(--bg-dark); }
+    .creds-bg .label { color: var(--accent-light); }
+    .creds-bg .h2 { color: var(--bg); }
+    .creds-bg .h2 em { color: var(--accent-light); }
+
+    .creds-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem; margin-top: 3rem;
+    }
+
+    .cred {
+      border: 1px solid rgba(255,255,255,0.22);
+      padding: 2rem 1.5rem; text-align: center;
+      transition: border-color 0.25s;
+    }
+    .cred:hover { border-color: var(--accent-light); }
+
+    .cred-icon {
+      display: flex; justify-content: center; margin-bottom: 1rem;
+    }
+
+    .cred-title {
+      font-size: 0.76rem; font-weight: 400;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--bg); margin-bottom: 0.4rem;
+    }
+    .cred-detail { font-size: 0.74rem; color: rgba(236,235,230,0.72); }
+
+    /* ── TESTIMONIALS ────────────────────── */
+    .testi-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem; margin-top: 3rem;
+    }
+
+    .tcard {
+      background: #F4F3EE; border: 1px solid var(--border);
+      padding: 2.5rem; position: relative; overflow: hidden;
+      transition: border-color 0.25s, transform 0.2s;
+    }
+    .tcard:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+    .tcard-qmark {
+      position: absolute; top: 1.2rem; right: 1.8rem;
+      font-family: var(--font-display); font-size: 5rem; font-weight: 300;
+      color: var(--accent-light); line-height: 1; user-select: none;
+    }
+
+    .tcard-tag {
+      display: inline-block;
+      font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--accent); background: var(--accent-pale);
+      padding: 0.28rem 0.65rem; margin-bottom: 1.4rem;
+      border-radius: 3px;
+    }
+
+    .tcard-quote {
+      font-family: var(--font-display);
+      font-size: 1.05rem; font-weight: 400; font-style: italic;
+      line-height: 1.72; color: var(--text); margin-bottom: 0.9rem;
+    }
+
+    .tcard-trans {
+      font-size: 0.8rem; color: var(--text-muted); line-height: 1.65;
+      margin-bottom: 1.5rem; padding-top: 0.8rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .tcard-author { font-size: 0.85rem; font-weight: 500; color: var(--text); }
+    .tcard-meta {
+      font-size: 0.68rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-muted); margin-top: 0.15rem;
+    }
+
+    /* ── CONTACT ─────────────────────────── */
+    .contact-bg { background: var(--bg-warm); }
+
+    .contact-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 6rem; align-items: start;
+    }
+
+    .contact-h {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 4vw, 3.4rem);
+      font-weight: 300; line-height: 1.1; color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+    .contact-h em { font-style: italic; color: var(--accent); }
+
+    .contact-sub {
+      font-size: 1.05rem; color: var(--text-muted);
+      line-height: 1.7; max-width: 42ch;
+    }
+
+    .contact-items { display: flex; flex-direction: column; gap: 0; }
+
+    .ci {
+      border-top: 1px solid var(--border); padding: 1.5rem 0;
+    }
+    .ci-label {
+      font-size: 0.64rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 0.4rem;
+    }
+    .ci-value {
+      font-family: var(--font-display);
+      font-size: 1.3rem; font-weight: 400; color: var(--text);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .ci-value:hover { color: var(--accent); }
+
+    /* ── FOOTER ──────────────────────────── */
+    footer {
+      background: var(--bg-dark); padding: 1.8rem 3rem;
+    }
+    .footer-inner {
+      max-width: 1300px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-name {
+      font-family: var(--font-display);
+      font-size: 0.95rem; color: var(--bg); font-weight: 300;
+    }
+    .footer-copy { font-size: 0.72rem; color: rgba(236,235,230,0.7); letter-spacing: 0.1em; }
+
+    /* ── ANIMATIONS ──────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(22px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+    .reveal.d1 { transition-delay: 0.1s; }
+    .reveal.d2 { transition-delay: 0.2s; }
+    .reveal.d3 { transition-delay: 0.3s; }
+    .reveal.d4 { transition-delay: 0.4s; }
+    .reveal.d5 { transition-delay: 0.5s; }
+    .reveal.d6 { transition-delay: 0.6s; }
+
+    /* ── RESPONSIVE ──────────────────────── */
+    @media (max-width: 960px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-links { display: none; }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 6rem 1.5rem 3rem; gap: 0;
+      }
+      .hero-visual { display: none; }
+
+      .container { padding: 0 1.5rem; }
+      .section-pad { padding: 5rem 0; }
+      .section-pad-sm { padding: 4rem 0; }
+
+      .about-grid, .exp-grid, .contact-grid {
+        grid-template-columns: 1fr; gap: 2.5rem;
+      }
+      .about-sticky, .exp-sticky { position: static; }
+
+      .services-grid { grid-template-columns: 1fr; }
+      .svc { border-right: none; }
+      .svc:nth-last-child(-n+3) { border-bottom: 1px solid var(--border); }
+      .svc:last-child { border-bottom: none; }
+
+      .creds-grid { grid-template-columns: repeat(2, 1fr); }
+
+      .testi-grid { grid-template-columns: 1fr; }
+
+      .tl-item { grid-template-columns: 1fr; gap: 0.4rem; }
+
+      footer { padding: 1.5rem; }
+      .footer-copy { display: none; }
+    }
+
+    @media (max-width: 520px) {
+      .creds-grid { grid-template-columns: 1fr; }
+      .hero-name { font-size: 3.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#top" class="nav-logo">Agnese <span>Upmane</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#testimonials">Testimonials</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="top">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Available &middot; Lucerne &middot; Zug &middot; Zürich</div>
+    <h1 class="hero-name">Agnese<br>Upmane</h1>
+    <p class="hero-title">Personal Assistant &amp; Household Manager</p>
+    <p class="hero-desc">Discreet, multilingual, meticulously organised. Over 25 years managing private households across three countries — with the calm to anticipate every need before it arises.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Get in touch</a>
+      <a href="#experience" class="btn-ghost">
+        View experience
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M6 2v8M2 8l4 4 4-4"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <img src="portrait.jpg" alt="Agnese Upmane" class="hero-portrait" style="object-fit: cover; border-radius: 20px;">
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="ruled">
+  <div class="container section-pad" id="about">
+    <div class="about-grid">
+      <div class="about-sticky reveal">
+        <div class="label">About</div>
+        <div class="stats">
+          <div class="stat"><div class="stat-num">25+</div><div class="stat-lbl">Years experience</div></div>
+          <div class="stat"><div class="stat-num">3</div><div class="stat-lbl">Countries</div></div>
+          <div class="stat"><div class="stat-num">3</div><div class="stat-lbl">Languages</div></div>
+        </div>
+      </div>
+      <div class="about-body reveal d2">
+        <p>Someone who has spent 25 years earning the trust of private families across three countries, through reliability, discretion, and care that does not need to be managed.</p>
+        <p>For over 25 years, across Latvia, Germany, and Switzerland, I have supported private families as both a hands-on housekeeper and a coordinating family manager. I hold the official Housekeeper qualification from the Bavarian State Ministry (2020), and I work fluently in German, English, and Latvian — adapting to the communication style of each principal I serve.</p>
+        <p>When my husband and I relocated from Germany to Switzerland in 2021 — organising housing searches, temporary accommodation, permits, cross-border logistics, and even the paperwork for our two cats during COVID restrictions — I managed the entire process from first inquiry to final move-in. <span data-tweak-target="workEthic">What I do under pressure is not a learned skill — it is a habit, and one I have practised quietly for most of my adult life.</span></p>
+        <p>I am currently based in Lucerne and available for a part- or full-time position in Lucerne, Zug, or Zürich.</p>
+        <p>I would welcome the chance to speak about how my experience might be of service to your household. References, certificates, and a longer conversation are available on request.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<div class="services-bg ruled" id="services">
+  <div class="container section-pad">
+    <div class="label reveal">What I Offer</div>
+    <h2 class="h2 reveal d1">A full-range<br><em>household service</em></h2>
+    <div class="services-grid">
+      <div class="svc reveal d1">
+        <div class="svc-num">01</div>
+        <div class="svc-name">Household &amp; Staff Coordination</div>
+        <div class="svc-desc">Organising and overseeing nannies, housekeepers, and external contractors across single or multiple properties — in Switzerland and internationally.</div>
+      </div>
+      <div class="svc reveal d2">
+        <div class="svc-num">02</div>
+        <div class="svc-name">Calendar &amp; Correspondence</div>
+        <div class="svc-desc">Managing schedules, appointments, and written communications on behalf of principals, with full discretion and proactive anticipation of needs.</div>
+      </div>
+      <div class="svc reveal d3">
+        <div class="svc-num">03</div>
+        <div class="svc-name">Travel Arrangements</div>
+        <div class="svc-desc">Booking flights, cars, hotels, and transfers for domestic and international travel. Occasional travel accompaniment when required.</div>
+      </div>
+      <div class="svc reveal d4">
+        <div class="svc-num">04</div>
+        <div class="svc-name">Invoice &amp; Administrative Tasks</div>
+        <div class="svc-desc">Sorting mail and invoices, liaising with accounting, and managing time-sensitive requests with precision and speed.</div>
+      </div>
+      <div class="svc reveal d5">
+        <div class="svc-num">05</div>
+        <div class="svc-name">Multilingual Communication</div>
+        <div class="svc-desc">Fluent in German, English, and native Latvian — handling communication directly with family, staff, and international service providers.</div>
+      </div>
+      <div class="svc reveal d6">
+        <div class="svc-num">06</div>
+        <div class="svc-name">Discretion &amp; Confidentiality</div>
+        <div class="svc-desc">25 years in private homes, with an unconditional reference from every employer. Confidentiality is not something I advertise — it is simply how I work.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPERIENCE -->
+<div class="ruled">
+  <div class="container section-pad" id="experience">
+    <div class="exp-grid">
+      <div class="exp-sticky reveal">
+        <div class="label">Experience</div>
+        <h2 class="h2">25 years<br><em>of trusted<br>service</em></h2>
+      </div>
+      <div class="timeline">
+        <div class="tl-item reveal">
+          <div class="tl-date">2023 &mdash; Present</div>
+          <div>
+            <div class="tl-role">Family Manager</div>
+            <div class="tl-employer">Fam. Ollig-Mordasini &middot; Lucerne</div>
+            <div class="tl-desc">Day-to-day logistics management for a family with three children — school runs, activity planning, coordinating household routines and external services.</div>
+          </div>
+        </div>
+        <div class="tl-item reveal d1">
+          <div class="tl-date">2021 &mdash; 2022</div>
+          <div>
+            <div class="tl-role">Housekeeper</div>
+            <div class="tl-employer">Fam. Jauch-Stolz &middot; Lucerne</div>
+            <div class="tl-desc">Full private household management to the highest standards of care. Reference: "She is an honest and reliable employee — we recommend her to any employer without reservation."</div>
+          </div>
+        </div>
+        <div class="tl-item reveal d2">
+          <div class="tl-date">2020 &mdash; 2021</div>
+          <div>
+            <div class="tl-role">Housekeeper</div>
+            <div class="tl-employer">Dr. Georg Haindl &middot; Augsburg</div>
+            <div class="tl-desc">Management of winter and summer residences, VIP wardrobe, antiques, and contractor oversight. Reference: "Extraordinary dedication, initiative, and professionalism."</div>
+          </div>
+        </div>
+        <div class="tl-item reveal d3">
+          <div class="tl-date">2019 &mdash; 2020</div>
+          <div>
+            <div class="tl-role">Professional Qualification</div>
+            <div class="tl-employer">Verbraucher Service Bayern &middot; Augsburg</div>
+            <div class="tl-desc">State-accredited Housekeeper Certificate. Final examination passed March 2020, certified by the Bavarian State Ministry for Food, Agriculture and Forestry.</div>
+          </div>
+        </div>
+        <div class="tl-item reveal d4">
+          <div class="tl-date">2017 &mdash; 2019</div>
+          <div>
+            <div class="tl-role">Data Entry &amp; Administration</div>
+            <div class="tl-employer">1 zu 1 Assekuranzservice AG &middot; Augsburg</div>
+            <div class="tl-desc">Database management, data input and updating for multiple insurance companies. Structured administrative work requiring precision and reliability.</div>
+          </div>
+        </div>
+        <div class="tl-item reveal d4">
+          <div class="tl-date">2016 &mdash; 2017</div>
+          <div>
+            <div class="tl-role">Nanny &amp; Housekeeper</div>
+            <div class="tl-employer">Nicole Reichsgräfin von Plettenberg &middot; Augsburg</div>
+            <div class="tl-desc">Childcare for one or two young children (Kindergarten pick-ups, playdates, outdoor activities) alongside light household duties. Reference: "the children quickly trusted her — I had no hesitation."</div>
+          </div>
+        </div>
+        <div class="tl-item reveal d4">
+          <div class="tl-date">January &mdash; June 2016</div>
+          <div>
+            <div class="tl-role">Nanny &amp; Housekeeper</div>
+            <div class="tl-employer">Dr. Irene Klingenberg &middot; Munich</div>
+            <div class="tl-desc">Full-day care for a Kindergarten-age boy — pick-ups, indoor and outdoor activity planning — with light household duties and ironing. Reference: "commitment, initiative, and impeccable conduct toward us and toward third parties."</div>
+          </div>
+        </div>
+        <div class="tl-item reveal d4">
+          <div class="tl-date">2008 &mdash; 2014</div>
+          <div>
+            <div class="tl-role">Junior Graphic Designer &amp; Database Editor</div>
+            <div class="tl-employer">European Data and Research Centre &middot; Riga</div>
+            <div class="tl-desc">Editorial production and database accuracy for TV-listings publications — typesetting, layout preparation, image insertion, and ongoing maintenance of the films and TV database. Returned to the role in 2013 after two years as a nanny. Precision under weekly publication deadlines.</div>
+          </div>
+        </div>
+        <div class="tl-item reveal d5">
+          <div class="tl-date">2011 &mdash; 2013</div>
+          <div>
+            <div class="tl-role">Nanny &amp; Family Manager</div>
+            <div class="tl-employer">Fam. Rosen &middot; Riga</div>
+            <div class="tl-desc">Full-time care and household coordination for an international family. Reference: "Well organised, diligent — one of the most dedicated individuals who has ever worked with our family."</div>
+          </div>
+        </div>
+        <div class="tl-item reveal d6">
+          <div class="tl-date">2003 &mdash; 2006</div>
+          <div>
+            <div class="tl-role">Nanny &amp; Family Manager</div>
+            <div class="tl-employer">Fam. Warzecha &middot; Riga</div>
+            <div class="tl-desc">Three and a half years with an international German-speaking family. Full responsibility for a child and household management. Reference: "Reliable, efficient and responsible."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CREDENTIALS -->
+<div class="creds-bg ruled" id="credentials">
+  <div class="container section-pad-sm">
+    <div class="label reveal">Qualifications</div>
+    <h2 class="h2 reveal d1">Certified &amp; <em>verified</em></h2>
+    <div class="creds-grid">
+      <div class="cred reveal d1">
+        <div class="cred-title">Housekeeper</div>
+        <div class="cred-detail">Bavarian State Ministry &middot; March 2020</div>
+      </div>
+      <div class="cred reveal d2">
+        <div class="cred-title">First Aid Certificate</div>
+        <div class="cred-detail">Malteser Hilfsdienst &middot; 2019</div>
+      </div>
+      <div class="cred reveal d3">
+        <div class="cred-title">Driver&rsquo;s Licence</div>
+        <div class="cred-detail">EU full licence</div>
+      </div>
+      <div class="cred reveal d4">
+        <div class="cred-title">3 Languages</div>
+        <div class="cred-detail">Latvian &middot; German &middot; English</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<div class="ruled">
+  <div class="container section-pad" id="testimonials">
+    <div class="label reveal">Testimonials</div>
+    <h2 class="h2 reveal d1"><em>References</em></h2>
+    <div class="testi-grid">
+
+      <div class="tcard reveal d1">
+        <div class="tcard-qmark">&ldquo;</div>
+        <div class="tcard-tag">Reliability</div>
+        <p class="tcard-quote">„Frau Upmane hat ihre Arbeit stets zu unserer besten Zufriedenheit erledigt. Sie ist eine ehrliche und verlässliche Mitarbeiterin. Wir können sie jedem Arbeitgeber vorbehaltlos empfehlen."</p>
+        <p class="tcard-trans">Ms Upmane carried out her work always to our complete satisfaction. She is an honest and reliable employee. We recommend her to any employer without reservation.</p>
+        <div><div class="tcard-author">Monika Jauch-Stolz</div><div class="tcard-meta">Lucerne &middot; 2022</div></div>
+      </div>
+
+      <div class="tcard reveal d2">
+        <div class="tcard-qmark">&ldquo;</div>
+        <div class="tcard-tag">Initiative</div>
+        <p class="tcard-quote">„Alle ihr übertragenen Aufgaben erledigte sie stets sorgfältig, selbstständig und zu meiner vollsten Zufriedenheit. Sie zeigte durchgängig große Eigeninitiative und überzeugte durch ihre außerordentliche Leistungsbereitschaft."</p>
+        <p class="tcard-trans">Every task entrusted to her she completed carefully, independently, and to my complete satisfaction. She consistently showed great initiative and extraordinary dedication.</p>
+        <div><div class="tcard-author">Dr. Georg Haindl</div><div class="tcard-meta">Augsburg &middot; 2021</div></div>
+      </div>
+
+      <div class="tcard reveal d3">
+        <div class="tcard-qmark">&ldquo;</div>
+        <div class="tcard-tag">Trust</div>
+        <p class="tcard-quote">„Frau Upmane war immer pünktlich und zuverlässig und erfüllte ihre Aufgaben stets zu meiner vollsten Zufriedenheit. Die Kinder fanden schnell Vertrauen zu ihr und ich hatte von Anfang an keine Bedenken."</p>
+        <p class="tcard-trans">Ms Upmane was always punctual and reliable and fulfilled her duties to my complete satisfaction. The children quickly trusted her and from the start I had no hesitation placing them in her care.</p>
+        <div><div class="tcard-author">Nicole Reichsgräfin von Plettenberg</div><div class="tcard-meta">Augsburg &middot; 2017</div></div>
+      </div>
+
+      <div class="tcard reveal d1">
+        <div class="tcard-qmark">&ldquo;</div>
+        <div class="tcard-tag">Professionalism</div>
+        <p class="tcard-quote">„Frau Upmane zeigte Engagement und Eigeninitiative und überzeugte stets durch Pflichtbewusstsein, Freundlichkeit und Zuvorkommenheit. Ihr Verhalten uns gegenüber sowie gegenüber Dritten war immer einwandfrei."</p>
+        <p class="tcard-trans">Ms Upmane showed commitment and initiative, impressing consistently with her sense of duty, friendliness, and attentiveness. Her conduct toward us and toward third parties was always impeccable.</p>
+        <div><div class="tcard-author">Dr. Irene Klingenberg</div><div class="tcard-meta">Munich &middot; 2016</div></div>
+      </div>
+
+      <div class="tcard reveal d2">
+        <div class="tcard-qmark">&ldquo;</div>
+        <div class="tcard-tag">Communication</div>
+        <p class="tcard-quote">„Frau Upmane ist eine flexible, engagierte und sehr zuverlässige Hilfe in unserem Haus. Sie arbeitet sehr selbstständig und mit viel Eigeninitiative. Die Kommunikation mit ihr verläuft äußerst klar und präzise."</p>
+        <p class="tcard-trans">Ms Upmane is a flexible, committed and very reliable support in our household. She works independently and with great initiative. Communication with her is extremely clear and precise.</p>
+        <div><div class="tcard-author">Manja &amp; André Kliese</div><div class="tcard-meta">Riga &middot; 2015</div></div>
+      </div>
+
+      <div class="tcard reveal d3">
+        <div class="tcard-qmark">&ldquo;</div>
+        <div class="tcard-tag">Dedication</div>
+        <p class="tcard-quote">"Agnese Upmane is well organised and diligent in her work. She is a very reliable and highly respected professional — one of the most dedicated individuals that has ever worked with my family."</p>
+        <div><div class="tcard-author">Annika Ohlin Rosén</div><div class="tcard-meta">Riga &middot; 2013</div></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="contact-bg ruled" id="contact">
+  <div class="container section-pad">
+    <div class="contact-grid">
+      <div>
+        <div class="label reveal">Contact</div>
+        <h2 class="contact-h reveal d1">When the<br><em>moment suits.</em></h2>
+        <p class="contact-sub reveal d2">Available for a conversation by email or telephone, at the time that best suits you.</p>
+      </div>
+      <div class="contact-items">
+        <div class="ci reveal d1">
+          <div class="ci-label">Email</div>
+          <a href="mailto:agnese.upmane@icloud.com" class="ci-value">agnese.upmane@icloud.com</a>
+        </div>
+        <div class="ci reveal d2">
+          <div class="ci-label">Phone</div>
+          <span class="ci-value">+41 (0)76 672 8020</span>
+        </div>
+        <div class="ci reveal d3">
+          <div class="ci-label">Location</div>
+          <span class="ci-value">Available for Lucerne· Zug · Zürich</span>
+        </div>
+        <div class="ci reveal d4">
+          <div class="ci-label">Languages</div>
+          <span class="ci-value">DE &middot; EN &middot; LV</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-name">Agnese Upmane</span>
+    <span class="footer-copy">Personal Assistant &amp; Household Manager &middot; Lucerne, Switzerland</span>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll border
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
